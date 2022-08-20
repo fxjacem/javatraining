@@ -1,20 +1,5 @@
 package fuelprice.lists;
 
-public class FuelTypes {
+public record FuelTypes(String fuelTypeId, String fuelTypeName) {
 
-    private String fuelTypeId;
-    private String fuelTypeName;
-
-    public FuelTypes(String fuelTypeId, String fuelTypeName) {
-        this.fuelTypeId = fuelTypeId;
-        this.fuelTypeName = fuelTypeName;
-    }
-
-    public String getFuelTypeId() {
-        return fuelTypeId;
-    }
-
-    public String getFuelTypeName() {
-        return fuelTypeName;
-    }
 }

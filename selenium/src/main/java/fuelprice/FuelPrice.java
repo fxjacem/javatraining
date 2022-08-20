@@ -14,13 +14,13 @@ import java.util.List;
 
 public class FuelPrice {
 
-    private final static String VALUE = "value";
+    private static final String VALUE = "value";
     private WebDriver driver;
 
-    private List<FuelTypes> fuelTypes = new ArrayList<>();
+    private final List<FuelTypes> fuelTypes = new ArrayList<>();
 
-    private List<Cities> cities = new ArrayList<>();
-    private List<Distances> distances = new ArrayList<>();
+    private final List<Cities> cities = new ArrayList<>();
+    private final List<Distances> distances = new ArrayList<>();
 
     public FuelPrice(String baseUrl) {
         driver = initDriver(baseUrl);
@@ -34,27 +34,21 @@ public class FuelPrice {
         List<WebElement> table = driver.findElements(By.xpath("//*[@id=\"tavolsag\"]/table/tbody/tr"));
         System.out.println(table.size());
 
-        for (int i = 1; i < 5; i++){
+        for (int i = 1; i < 9; i++){
             WebElement tableRow = table.get(i);
-            String query = String.format("//*[@id=\"tavolsag\"]/table/tbody/tr[%d]/td[2]/", i);
-            String price = tableRow.findElement(By.xpath(query+"strong")).getText();
-            WebElement span = tableRow.findElement(By.xpath(query+"span/a"));
-            String link = span.getAttribute("href");
-            String title = span.getText();
-            System.out.println(price + " - " + link + " - " + title.trim());
+            String query = String.format("//*[@id=\"tavolsag\"]/table/tbody/tr[%d]/", i);
+            String price = tableRow.findElement(By.xpath(query+"td[2]/strong")).getText().split(",-")[0];
+            String address = driver.findElement(By.xpath(query+"td[3]/a")).getText();
+            String distance = tableRow.findElement(By.xpath(query+"td[4]/strong")).getText().split(" km")[0];
 
-            // price: //*[@id="tavolsag"]/table/tbody/tr[1]/td[2]/strong
-            // address: //*[@id="tavolsag"]/table/tbody/tr[1]/td[2]/span/a
-            // #tavolsag > table > tbody > tr:nth-child(1) > td:nth-child(2) > span > a
-            //*[@id="tavolsag"]/table/tbody/tr[1]/td[2]
-
+            System.out.println(price + " - " + address + " - " + distance);
         }
     }
     public void distanceSelector() {
         String formatDistance = "%3s - %s" + System.lineSeparator();
         System.out.println("Selectable distances:");
         for (Distances actual : distances) {
-            System.out.printf(formatDistance, actual.getDistanceId(), actual.getDistanceName());
+            System.out.printf(formatDistance, actual.distanceId(), actual.distanceName());
         }
         System.out.print("Choose a distance: ");
     }
@@ -63,7 +57,7 @@ public class FuelPrice {
         String formatFuel = "%3s - %s" + System.lineSeparator();
         System.out.println("Optional fuels:");
         for (FuelTypes actual : fuelTypes) {
-            System.out.printf(formatFuel, actual.getFuelTypeId(), actual.getFuelTypeName());
+            System.out.printf(formatFuel, actual.fuelTypeId(), actual.fuelTypeName());
         }
         System.out.print("Choose fuel: ");
     }
@@ -71,8 +65,8 @@ public class FuelPrice {
     public String getCityId (String cityName) {
 
         for (Cities actual : cities) {
-            if(actual.getCityName().equals(cityName)) {
-                return actual.getCityId();
+            if(actual.cityName().equals(cityName)) {
+                return actual.cityId();
             }
         }
 

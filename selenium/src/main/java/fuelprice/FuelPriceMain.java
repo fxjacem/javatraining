@@ -12,7 +12,7 @@ public class FuelPriceMain {
         FuelPrice program = new FuelPrice(baseUrl);
 
         Scanner scanner = new Scanner(System.in);
-/*
+
         program.fuelSelector();
         String fuelId = scanner.nextLine();
 
@@ -24,9 +24,9 @@ public class FuelPriceMain {
         String distanceId = scanner.nextLine();
 
         program.inquiryOfPrices(String.format(queryUrl, fuelId, cityId, distanceId));
-*/
 
-        program.inquiryOfPrices("https://holtankoljak.hu/index.php?ua_map=1&uz_tip=1&mycity=2853&myrad=10#page_ad");
+
+        // program.inquiryOfPrices("https://holtankoljak.hu/index.php?ua_map=1&uz_tip=1&mycity=2853&myrad=10#page_ad");
 
         program.quitDriver();
     }
