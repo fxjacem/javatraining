@@ -9,4 +9,12 @@ public class Cities {
         this.cityId = cityId;
         this.cityName = cityName;
     }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
 }

@@ -14,27 +14,76 @@ import java.util.List;
 
 public class FuelPrice {
 
-    private final String queryUrl = "https://holtankoljak.hu/index.php?ua_map=1&uz_tip=%d&mycity=%d&myrad=%d#page_ad";
+    private final static String VALUE = "value";
     private WebDriver driver;
 
     private List<FuelTypes> fuelTypes = new ArrayList<>();
+
     private List<Cities> cities = new ArrayList<>();
     private List<Distances> distances = new ArrayList<>();
 
-    public FuelPrice() {
-        driver = initDriver();
+    public FuelPrice(String baseUrl) {
+        driver = initDriver(baseUrl);
         setLists();
     }
 
-    public void distancesList() {
-        System.out.println(distances.toString());
+    public void inquiryOfPrices(String queryUrl) {
+        System.out.println("queryUrl= " + queryUrl);
+        driver.get(queryUrl);
+
+        List<WebElement> table = driver.findElements(By.xpath("//*[@id=\"tavolsag\"]/table/tbody/tr"));
+        System.out.println(table.size());
+
+        for (int i = 1; i < 5; i++){
+            WebElement tableRow = table.get(i);
+            String query = String.format("//*[@id=\"tavolsag\"]/table/tbody/tr[%d]/td[2]/", i);
+            String price = tableRow.findElement(By.xpath(query+"strong")).getText();
+            WebElement span = tableRow.findElement(By.xpath(query+"span/a"));
+            String link = span.getAttribute("href");
+            String title = span.getText();
+            System.out.println(price + " - " + link + " - " + title.trim());
+
+            // price: //*[@id="tavolsag"]/table/tbody/tr[1]/td[2]/strong
+            // address: //*[@id="tavolsag"]/table/tbody/tr[1]/td[2]/span/a
+            // #tavolsag > table > tbody > tr:nth-child(1) > td:nth-child(2) > span > a
+            //*[@id="tavolsag"]/table/tbody/tr[1]/td[2]
+
+        }
+    }
+    public void distanceSelector() {
+        String formatDistance = "%3s - %s" + System.lineSeparator();
+        System.out.println("Selectable distances:");
+        for (Distances actual : distances) {
+            System.out.printf(formatDistance, actual.getDistanceId(), actual.getDistanceName());
+        }
+        System.out.print("Choose a distance: ");
+    }
+
+    public void fuelSelector() {
+        String formatFuel = "%3s - %s" + System.lineSeparator();
+        System.out.println("Optional fuels:");
+        for (FuelTypes actual : fuelTypes) {
+            System.out.printf(formatFuel, actual.getFuelTypeId(), actual.getFuelTypeName());
+        }
+        System.out.print("Choose fuel: ");
+    }
+
+    public String getCityId (String cityName) {
+
+        for (Cities actual : cities) {
+            if(actual.getCityName().equals(cityName)) {
+                return actual.getCityId();
+            }
+        }
+
+        return null;
     }
     public void quitDriver() {
         driver.quit();
     }
-    private WebDriver initDriver() {
-        WebDriver driver = new ChromeDriver();
-        String baseUrl = "https://holtankoljak.hu/";
+    private WebDriver initDriver(String baseUrl) {
+        driver = new ChromeDriver();
+
         driver.get(baseUrl);
         WebElement submitButton = driver.findElement(By.xpath("//*[@id=\"qc-cmp2-ui\"]/div[2]/div/button[2]"));
         submitButton.click();
@@ -43,41 +92,45 @@ public class FuelPrice {
     }
 
     private void setLists() {
+        addFuelTypes();
+        addCities();
         addDistances();
-
     }
 
     private void addFuelTypes() {
         // https://www.selenium.dev/documentation/webdriver/elements/select_lists/
+        System.out.println("Collection: fuel type");
         WebElement selectElement = driver.findElement(By.name("uz_tip"));
         Select selectObject = new Select(selectElement);
         List<WebElement> allAvailableOptions = selectObject.getOptions();
 
         for (int i = 1; i < allAvailableOptions.size(); i++){
             WebElement actual = allAvailableOptions.get(i);
-            fuelTypes.add(new FuelTypes(actual.getAttribute("value"), actual.getText()));
+            fuelTypes.add(new FuelTypes(actual.getAttribute(VALUE), actual.getText()));
         }
     }
     private void addCities() {
         // https://www.selenium.dev/documentation/webdriver/elements/select_lists/
+        System.out.println("Collection: cities");
         WebElement selectElement = driver.findElement(By.name("mycity"));
         Select selectObject = new Select(selectElement);
         List<WebElement> allAvailableOptions = selectObject.getOptions();
 
         for (int i = 1; i < allAvailableOptions.size(); i++){
             WebElement actual = allAvailableOptions.get(i);
-            cities.add(new Cities(actual.getAttribute("value"), actual.getText()));
+            cities.add(new Cities(actual.getAttribute(VALUE), actual.getText()));
         }
     }
     private void addDistances() {
         // https://www.selenium.dev/documentation/webdriver/elements/select_lists/
+        System.out.println("Collection: distances");
         WebElement selectElement = driver.findElement(By.name("myrad"));
         Select selectObject = new Select(selectElement);
         List<WebElement> allAvailableOptions = selectObject.getOptions();
 
         for (int i = 1; i < allAvailableOptions.size(); i++){
             WebElement actual = allAvailableOptions.get(i);
-            distances.add(new Distances(actual.getAttribute("value"), actual.getText()));
+            distances.add(new Distances(actual.getAttribute(VALUE), actual.getText()));
         }
     }
 
