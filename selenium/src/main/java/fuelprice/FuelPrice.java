@@ -38,7 +38,7 @@ public class FuelPrice {
             WebElement tableRow = table.get(i);
             String query = String.format("//*[@id=\"tavolsag\"]/table/tbody/tr[%d]/", i);
             String price = tableRow.findElement(By.xpath(query+"td[2]/strong")).getText().split(",-")[0];
-            String address = driver.findElement(By.xpath(query+"td[3]/a")).getText();
+            String address = tableRow.findElement(By.xpath(query+"td[3]/a")).getText();
             String distance = tableRow.findElement(By.xpath(query+"td[4]/strong")).getText().split(" km")[0];
 
             System.out.println(price + " - " + address + " - " + distance);
