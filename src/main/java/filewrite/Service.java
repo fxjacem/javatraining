@@ -24,11 +24,11 @@ public class Service {
     }
 
     private void writeTaxesToFile() {
-        try {
-            List<String> output = taxes.stream()
-                    .map(Tax::toString)
-                    .toList();
+        List<String> output = taxes.stream()
+                .map(Tax::toString)
+                .toList();
 
+        try {
             Files.write(path, output);
         } catch (IOException ioe) {
             throw new IllegalStateException("File write error!", ioe);
