@@ -1,6 +1,7 @@
 package filewrite;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class Service {
         taxes.add(new Tax("12321", 400));
 
         service.writeTaxesToFile();
+        service.writeWithPrintWriter();
     }
 
     private void writeTaxesToFile() {
@@ -30,6 +32,16 @@ public class Service {
 
         try {
             Files.write(path, output);
+        } catch (IOException ioe) {
+            throw new IllegalStateException("File write error!", ioe);
+        }
+    }
+
+    private void writeWithPrintWriter() {
+        try {
+            PrintWriter output = new PrintWriter("src/main/resources/taxes_pw.txt");
+            output.print(taxes);
+            output.close();
         } catch (IOException ioe) {
             throw new IllegalStateException("File write error!", ioe);
         }

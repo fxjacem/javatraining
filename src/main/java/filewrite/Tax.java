@@ -16,7 +16,7 @@ public class Tax{
         return "Tax{" +
                 "taxNumber='" + taxNumber + '\'' +
                 ", taxValue=" + taxValue +
-                '}';
+                '}' + "\n";
     }
 
 }
