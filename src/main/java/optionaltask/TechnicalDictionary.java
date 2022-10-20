@@ -17,13 +17,7 @@ public class TechnicalDictionary {
     private static final String RAW_BEGIN = "https://raw.githubusercontent.com";
 
 
-    public Map<String, String> createDictionary() {
-        String url = "https://github.com/Strukturavaltas3-Alap-Java/java-strukturavalto3-alap/blob/main/dictionary.md";
-
-        return getContent(url);
-    }
-
-    private Map<String, String> getContent(String url) {
+    public Map<String, String> createDictionary(String url) {
         String lines = urlReader(createRawUrl(url));
 
         return processLines(lines);
@@ -65,8 +59,9 @@ public class TechnicalDictionary {
     public static void main(String[] args){
 
         TechnicalDictionary rff = new TechnicalDictionary();
+        String url = "https://github.com/Strukturavaltas3-Alap-Java/java-strukturavalto3-alap/blob/main/dictionary.md";
 
-        Map<String, String> content = rff.createDictionary();
+        Map<String, String> content = rff.createDictionary(url);
 
         for (Map.Entry<String, String> actual : content.entrySet()){
             System.out.println(actual.getKey() + " = " + actual.getValue());
