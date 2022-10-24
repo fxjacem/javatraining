@@ -1,10 +1,7 @@
 package sortintreemap;
 
-import javax.sound.midi.Soundbank;
 import java.text.Collator;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Student {
 
